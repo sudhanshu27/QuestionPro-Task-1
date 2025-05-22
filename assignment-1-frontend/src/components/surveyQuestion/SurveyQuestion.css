@@ -1,0 +1,45 @@
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.survey-question {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.question-block {
+  background-color: rgb(240, 161, 124);
+  margin: 1.5rem;
+  padding: 0.7rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.question-options {
+  background-color: rgb(246, 192, 154);
+  margin: 7px;
+  padding: 2px 100px 2px 2px;
+  border-radius: 5px;
+  width: fit-content;
+}
+li > input {
+  cursor: pointer;
+}
+.question-options:hover {
+  background-color: rgb(249, 214, 154);
+}
+
+.question-options label {
+  display: block;
+  cursor: pointer;
+}
+
+.question-options input[type="radio"] {
+  margin-right: 8px; /* Space between radio and text */
+}
+.highlighted-question {
+  box-shadow: 0 0 0 6px rgba(255, 0, 0, 0.532), 0 0 10px rgba(255, 0, 0, 0.4), 0 0 20px rgba(255, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+  transition: box-shadow 0.3s ease-in-out;
+}
