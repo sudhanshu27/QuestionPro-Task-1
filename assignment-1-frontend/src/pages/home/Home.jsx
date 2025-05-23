@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./Home.css";
 import SurveyQuestion from "../../components/surveyQuestion/SurveyQuestion";
-// import questions from "../../data/question.json";
+import Pagination from "../../components/pagination/Pagination";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -17,6 +17,17 @@ const Home = () => {
   const [responses, setResponses] = useState([]);
   const [highlightedIndex, setHighlightedIndex] = useState(null);
   const navigate = useNavigate();
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [questionsPerPage] = useState(2);
+
+  const indexOfLastQuestion = currentPage * questionsPerPage;
+  const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
+  const currentQuestions = questions.slice(
+    indexOfFirstQuestion,
+    indexOfLastQuestion
+  );
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -37,16 +48,20 @@ const Home = () => {
     const newResponses = [...responses];
     newResponses[index] = value;
     setResponses(newResponses);
-    setHighlightedIndex(null); // Reset highlighted index when user selects an answer
+    setHighlightedIndex(null); // Reset highlight on answer change
+  };
+
+  // Remove per-page validation, just set page directly on click
+  const handlePageChange = (newPage) => {
+    setHighlightedIndex(null); // clear highlight on page change (optional)
+    setCurrentPage(newPage);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Form validation
     if (!name.trim()) {
       alert("Please enter your name.");
-      // toast.error("Please enter your name.");
       return;
     }
 
@@ -60,15 +75,20 @@ const Home = () => {
       return;
     }
 
+    // Full validation on submit: check all questions answered
     for (let i = 0; i < responses.length; i++) {
       if (responses[i] === "") {
-        // alert(`Please answer question ${i + 1}.`);
         toast.warning(`Please answer question ${i + 1}.`);
         setHighlightedIndex(i);
+
+        // Jump to page of the unanswered question
+        const page = Math.floor(i / questionsPerPage) + 1;
+        setCurrentPage(page);
         return;
       }
     }
 
+    // Submit form if all valid
     try {
       const res = await axios.post("http://localhost:3000/api/submit", {
         name,
@@ -78,7 +98,6 @@ const Home = () => {
 
       toast.success(res.data.message);
 
-      // Navigate with email in state
       navigate("/user-result", {
         state: {
           email,
@@ -134,12 +153,20 @@ const Home = () => {
           </div>
           <hr className="hr" />
           <SurveyQuestion
-            questions={questions}
+            questions={currentQuestions}
             responses={responses}
             handleResponseChange={handleResponseChange}
             highlightedIndex={highlightedIndex}
+            currentPage={currentPage}
+            questionsPerPage={questionsPerPage}
           />
           <hr className="hr" />
+          <Pagination
+            postsPerPage={questionsPerPage}
+            totalPosts={questions.length}
+            setCurrentPage={handlePageChange}
+            currentPage={currentPage}
+          />
           <div className="submit-button">
             <button type="submit">Submit Form</button>
           </div>
