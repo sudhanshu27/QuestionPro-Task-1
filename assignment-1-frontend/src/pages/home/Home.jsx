@@ -20,7 +20,7 @@ const Home = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [questionsPerPage] = useState(2);
+  const [questionsPerPage] = useState(4);
 
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;

@@ -78,8 +78,8 @@ const AllResults = () => {
                   <td>{result.email}</td>
                   <td>{result.score}</td>
                   <td>{index + 1}</td>
-                  <td className={result.score >= 3 ? "correct" : "wrong"}>
-                    {result.score >= 3 ? "Pass" : "Fail"}
+                  <td className={result.score > 5 ? "correct" : "wrong"}>
+                    {result.score > 5 ? "Pass" : "Fail"}
                   </td>
                   <td>
                     <button
